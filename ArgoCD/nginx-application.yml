@@ -14,7 +14,7 @@ spec:
   source:
     repoURL: 'https://github.com/yeonkyu-git/test-argocd.git'
     targetRevision: main          # 브랜치, 태그, 커밋해시 모두 가능
-    path: nginx # 해당 경로의 YAML 사용
+    path: manifest/nginx # 해당 경로의 YAML 사용
 
   # ── 배포 대상 ──
   destination:

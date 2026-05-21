@@ -1,0 +1,8 @@
+TodoList 배포 완료!
+
+앱 접근 방법:
+  kubectl port-forward svc/{{ include "todolist.fullname" . }} 8080:{{ .Values.service.port }}
+  http://localhost:8080 접속
+
+상태 확인:
+  kubectl get pods -l app.kubernetes.io/name={{ include "todolist.name" . }}

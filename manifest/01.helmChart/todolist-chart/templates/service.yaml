@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "todolist.fullname" . }}
+  namespace: {{ .Values.namespace }} 
+  labels:
+    {{- include "todolist.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+      protocol: TCP
+  selector:
+    {{- include "todolist.selectorLabels" . | nindent 4 }}

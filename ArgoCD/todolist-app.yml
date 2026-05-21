@@ -13,8 +13,11 @@ spec:
   # ── 소스 정의 (Git + Helm/Kustomize 선택) ──
   source:
     repoURL: 'https://github.com/yeonkyu-git/test-argocd.git'
-    targetRevision: main          # 브랜치, 태그, 커밋해시 모두 가능
-    path: manifest/00.nginx # 해당 경로의 YAML 사용
+    targetRevision: HEAD          # 브랜치, 태그, 커밋해시 모두 가능
+    path: manifest/01.helmChart/todolist-chart # 해당 경로의 YAML 사용
+    helm:
+      valueFiles:
+        - values.yaml
 
   # ── 배포 대상 ──
   destination:

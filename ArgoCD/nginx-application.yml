@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: my-app-nginx
+  namespace: argocd
+  labels:
+    team: platform
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io  # 삭제 시 K8s 리소스도 제거
+spec:
+  project: default
+  
+  # ── 소스 정의 (Git + Helm/Kustomize 선택) ──
+  source:
+    repoURL: 'https://github.com/yeonkyu-git/test-argocd.git'
+    targetRevision: main          # 브랜치, 태그, 커밋해시 모두 가능
+    path: nginx # 해당 경로의 YAML 사용
+
+  # ── 배포 대상 ──
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dev
+
+  # ── 동기화 정책 ──
+  syncPolicy:
+    automated:
+      prune: true      # Git에서 삭제된 리소스 K8s에서도 제거
+      selfHeal: true   # drift 감지 시 자동 복구
+    syncOptions:
+      - CreateNamespace=true   # 네임스페이스 없으면 자동 생성
+      - PrunePropagationPolicy=foreground
+    retry:
+      limit: 3
+      backoff:
+        duration: 10s
+        maxDuration: 3m
+        factor: 2

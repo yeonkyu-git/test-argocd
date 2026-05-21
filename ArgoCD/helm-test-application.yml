@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata: 
+  name: helm-app
+  namespace: argocd
+spec: 
+  project: default
+
+  source: 
+    path: helm-guestbook
+    repoURL: "https://github.com/mabusaa/argocd-example-apps.git"
+    targetRevision: master
+    helm:
+     releaseName: dev-app
+
+  destination: 
+    namespace: dev
+    server: "https://kubernetes.default.svc"
+
+  syncPolicy:
+    automated:
+      prune: true      # Git에서 삭제된 리소스 K8s에서도 제거
+      selfHeal: true   # drift 감지 시 자동 복구
+    syncOptions:
+      - CreateNamespace=true   # 네임스페이스 없으면 자동 생성
+      - PrunePropagationPolicy=foreground
+    retry:
+      limit: 3
+      backoff:
+        duration: 10s
+        maxDuration: 3m
+        factor: 2
